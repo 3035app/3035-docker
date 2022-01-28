@@ -54,5 +54,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 WORKDIR /var/www/pialab-back/
 EXPOSE 80/tcp
 
+CMD apache2 -DFOREGROUND
+
 LABEL author=PiaLab
 LABEL description='PiaLab backend - Login directly using the account "test" with password "test" (which is super admin) pointing on http://server/index.php.'
