@@ -6,12 +6,16 @@ RUN apt-get update && apt-get install --no-install-recommends -y apt-transport-h
     && apt-get autoremove -y && apt-get clean
 
 COPY src/ /var/www/pialab-front/
-COPY docker/environment.dev.ts /var/www/pialab-front/src/environments/
+# COPY docker/environment.dev.ts /var/www/pialab-front/src/environments/
+
+COPY docker/entrypoint.sh /
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
 
 RUN npm install -g @angular/cli
 
-RUN cd /var/www/pialab-front/ \
-    && npm install
+# RUN cd /var/www/pialab-front/ \
+#    && npm install
 
 CMD cd /var/www/pialab-front/src/ \
     && ng serve --host 0.0.0.0

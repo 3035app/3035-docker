@@ -6,8 +6,8 @@ services:
     container_name: pialab_back
     depends_on:
       - nginx-proxy
-    # volumes:
-    #   - ./back/src:/var/www/pialab-back/
+    volumes:
+      - ./back/src:/var/www/pialab-back/
     ports:
       - '8000:80'
     environment:
@@ -20,8 +20,8 @@ services:
     depends_on:
       - back
       - nginx-proxy
-    # volumes:
-    #   - ./front/src:/var/www/pialab-front/
+    volumes:
+      - ./front/src:/var/www/pialab-front/
     ports:
       - '8080:4200'
     environment:

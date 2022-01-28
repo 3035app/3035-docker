@@ -16,4 +16,5 @@ git clone ssh://git@git.pialab.io:2222/pialab/front.git ./front/src
 
 ```
 docker build . -t pialab-back:1644
+docker build . -t pialab-front:1957
 ```
