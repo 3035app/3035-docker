@@ -5,10 +5,10 @@ RUN apt-get update && apt-get install --no-install-recommends -y apt-transport-h
     && apt-get install --no-install-recommends -y nano \
     && apt-get autoremove -y && apt-get clean
 
-COPY pialab-front/Front/ /var/www/pialab-front/
-COPY pialab-front/environments/environment.dev.ts /var/www/pialab-front/src/environments/
+COPY src/ /var/www/pialab-front/
+COPY docker/environment.dev.ts /var/www/pialab-front/src/environments/
 
-RUN npm install -g @angular/cli 
+RUN npm install -g @angular/cli
 
 RUN cd /var/www/pialab-front/ \
     && npm install
@@ -22,4 +22,3 @@ EXPOSE 4200
 
 LABEL author=PiaLab
 LABEL description="PiaLab frontend"
-

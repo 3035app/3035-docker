@@ -13,3 +13,7 @@ cd <piablab-root>
 git clone ssh://git@git.pialab.io:2222/pialab/back.git ./back/src
 git clone ssh://git@git.pialab.io:2222/pialab/front.git ./front/src
 ```
+
+```
+docker build . -t pialab-back:1644
+```
