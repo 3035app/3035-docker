@@ -32,6 +32,9 @@ COPY docker/000-default.conf /etc/apache2/sites-available/
 # TODO: issue on libs versions -- waiting for Sf upgrade
 # RUN cd /var/www/pialab-back/ \
 #   && composer install
+# alternative:
+COPY docker/vendor/ /var/www/pialab-back/vendor/
+
 
 RUN /etc/init.d/postgresql start \
     && echo "CREATE ROLE user_pialab SUPERUSER LOGIN PASSWORD 'password_pialab'" | sudo -u postgres psql template1 \
@@ -42,7 +45,9 @@ RUN /etc/init.d/postgresql start \
     && bin/console pia:user:promote test@test.tld --role=ROLE_SUPER_ADMIN \
     && /etc/init.d/postgresql stop
 
-COPY back/docker/entrypoint.sh /
+RUN a2enmod rewrite
+
+COPY docker/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
