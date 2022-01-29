@@ -1,4 +1,4 @@
-* créer le docker_compose
-* gérer les volumes ? (bdd, vendors du back, vendors du front)
+* pb des droits sur Sf cache
 * pb du proxy sur Front
-* persistence bdd
+* persistance bdd ?
+* solution pour backend .env
