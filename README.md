@@ -20,7 +20,7 @@ git clone ssh://git@git.pialab.io:2222/pialab/front.git ./front/src
 
 FIXME: We do have an issue with `composer install` on the backend. For now we have to manually copy the `vendor` directory into the Symfony source directory:
 ```
-copy -R ./back/docker/vendor ./back/src/
+cp -R ./back/docker/vendor ./back/src/
 ```
 
 Build the containers:
@@ -28,12 +28,12 @@ Build the containers:
 docker-compose build
 ```
 
-Copy the backend development environment:
+Copy development environments:
 
 FIXME: Find a better solution!
 
 ```
-copy ./back/docker/.env ./back/src/
+cp ./back/docker/.env ./back/src/
 ```
 
 Set rights for Symfony cache:

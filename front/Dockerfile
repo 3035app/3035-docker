@@ -5,8 +5,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y apt-transport-h
     && apt-get install --no-install-recommends -y nano \
     && apt-get autoremove -y && apt-get clean
 
-# COPY src/ /var/www/pialab-front/
-# COPY docker/environment.dev.ts /var/www/pialab-front/src/environments/
+COPY src/ /var/www/pialab-front/
+COPY docker/environment.dev.ts /var/www/pialab-front/src/environments/
 
 COPY docker/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
