@@ -34,6 +34,7 @@ FIXME: Find a better solution!
 
 ```
 cp ./back/docker/.env ./back/src/
+cp ./front/docker/environment.dev.ts ./front/src/src/environments/
 ```
 
 Set rights for Symfony cache:
