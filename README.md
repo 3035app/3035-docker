@@ -36,6 +36,13 @@ FIXME: Find a better solution!
 copy ./back/docker/.env ./back/src/
 ```
 
+Set rights for Symfony cache:
+
+```
+mkdir ./back/src/var
+chmod 777 ./back/src/var
+```
+
 Run the containers:
 ```
 docker-compose up
