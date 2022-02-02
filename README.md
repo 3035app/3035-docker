@@ -68,3 +68,13 @@ Create an application in backend app:
 - On applications list, click on key icon of "Default app", copy "Client ID" and "Client Secret" and paste into front/src/src/envirnments/envirnment.dev.ts file
 - Go to "Utilisateurs" tab, edit test user and add Application "Default app"
 - Restart pialab_front container
+
+# Gitlab management
+
+To summarize, there are 3 git repositories:
+
+- docker (https://git.pialab.io/pialab/docker) for global dev environment
+- Front (https://git.pialab.io/pialab/front) for frontent app (Angular)
+- back (https://git.pialab.io/pialab/back) for backend app (Symfony)
+
+These 3 repositories are independent, they need to be managed individually
