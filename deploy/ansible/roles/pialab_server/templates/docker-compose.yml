@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  back:
+    build: back
+    container_name: pialab_back
+    depends_on:
+      - nginx-proxy
+    volumes:
+      - ./back/src:/var/www/pialab-back/
+    ports:
+      - '8000:80'
+
+  front:
+    build: front
+    container_name: pialab_front
+    depends_on:
+      - back
+      - nginx-proxy
+    volumes:
+      - ./front/src:/var/www/pialab-front/
+    ports:
+      - '8080:4200'
+

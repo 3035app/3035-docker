@@ -1,0 +1,21 @@
+- name: Creating deployment directory
+  file:
+    path: "{{ DEPLOYMENT_DIR }}"
+    state: directory
+    mode: 0755
+    owner: "{{ DEPLOY_USER }}"
+    group: "{{ DEPLOY_USER }}"
+  become: true
+  when: not FAST_DEPLOYMENT
+
+- name: Cloning repository(ies) (limited depth)
+  with_items: "{{ repositories }}"
+  git:
+    repo: "{{ item.repo }}"
+    dest: "{{ item.dest }}"
+    version: "{{ GIT_BRANCH }}"
+    force: yes
+    single_branch: yes
+  environment:
+    GIT_TERMINAL_PROMPT: 0
+  register: git_output

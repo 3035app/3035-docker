@@ -1,0 +1,37 @@
+
+- name: Creating directories
+  file: path={{ item }} state=directory mode=0750 owner={{ DEPLOY_USER }}
+  with_items:
+    - "{{ NGINX_LOG_DIR }}"
+  when: not FAST_DEPLOYMENT
+  become: true
+
+- name: Creating backend directories (specific owner)
+  file: path={{ item }} state=directory mode=0750 owner={{ DEPLOY_USER }}
+  with_items:
+    - "{{ BACKEND_LOG_DIR }}"
+    - "{{ DJANGO_MEDIA_DIR }}"
+    - "{{ DJANGO_STATIC_DIR }}"
+  when: not FAST_DEPLOYMENT
+  become: true
+
+- name: Set "MAILTO" environment variable to crontab
+  ansible.builtin.cron:
+    name: MAILTO
+    env: yes
+    job: equipe@lesoctetslibres.com
+    state: present
+
+- name: Generating docker-compose.yml file
+  template: src=docker-compose.yml dest={{ DEPLOYMENT_DIR }}/docker-compose.deploy.yml
+
+- name: Docker build & restart
+  docker_compose:
+    project_src: "{{ DEPLOYMENT_DIR }}"
+    files: "docker-compose.deploy.yml"
+    state: present
+    build: yes
+    restarted: yes
+    nocache: "{{ FAST_DEPLOYMENT | ternary(yes,no)}}"
+  notify:
+    - "deployment done"

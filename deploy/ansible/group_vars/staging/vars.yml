@@ -1,0 +1,17 @@
+GIT_BRANCH: dev
+
+NGINX_ENDPOINTS:
+  - hostname: back.{{ DOMAIN_NAME }}
+    log_access_filename: back-access.log
+    log_error_filename: back-error.log
+    docker_port: 8000
+    serve_static_path: False
+    # max_upload_size: 8M
+    ips_only: []
+
+  - hostname: front.{{ DOMAIN_NAME }}
+    log_access_filename: front-access.log
+    log_error_filename: front-error.log
+    docker_port: 8080
+    serve_static_path: False
+    ips_only: []

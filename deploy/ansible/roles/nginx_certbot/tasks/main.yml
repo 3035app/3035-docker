@@ -1,0 +1,40 @@
+- name: installing nginx and required packages for Let's encrypt certificates
+  apt:
+    pkg:
+      - nginx
+      - python3-certbot-nginx
+    state: present
+  notify:
+    - restart nginx
+  when: not FAST_DEPLOYMENT
+  become: true
+
+- name: autorotate nginx logs
+  template: src=logrotate.j2 dest=/etc/logrotate.d/nginx mode=0644 owner=root
+  when: not FAST_DEPLOYMENT
+  become: true
+
+- name: nginx configuration
+  template: src=nginx.j2 dest=/etc/nginx/sites-enabled/default
+  notify:
+    - restart nginx
+  register: nginx_config
+  when: not FAST_DEPLOYMENT
+  become: true
+
+# restart nginx before running certbot because when adding new domain, letsencrypt needs to reach the host
+- name: restart nginx
+  become: True
+  service: name=nginx state=restarted
+  when: nginx_config is changed
+
+- name: Associate SSL certificates to email address
+  template: src=lets_encrypt_cli.ini dest=/etc/letsencrypt/cli.ini
+  become: true
+  when: not FAST_DEPLOYMENT
+
+- name: Creating/updating HTTPS certificate
+  with_items: "{{ NGINX_ENDPOINTS }}"
+  command: certbot --nginx certonly --agree-tos -d {{ item.hostname }} -n --keep-until-expiring
+  become: true
+  when: not FAST_DEPLOYMENT
