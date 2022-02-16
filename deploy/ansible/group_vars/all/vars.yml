@@ -5,11 +5,11 @@ PROJECT_DIR: /home/{{ DEPLOY_USER }}/{{ PROJECT_NAME }}
 DEPLOYMENT_DIR: "{{ PROJECT_DIR }}/current"
 repositories:
   - repo: "https://git:{{ vault_gitlab_access_token_docker }}@git.pialab.io/pialab/docker.git"
-    dest: "{{ DEPLOYMENT_DIR }}/pialab"
+    dest: "{{ DEPLOYMENT_DIR }}"
   - repo: "https://git:{{ vault_gitlab_access_token_front }}@git.pialab.io/pialab/front.git"
-    dest: "{{ DEPLOYMENT_DIR }}/pialab/front/src/"
+    dest: "{{ DEPLOYMENT_DIR }}/front/src/"
   - repo: "https://git:{{ vault_gitlab_access_token_back }}@git.pialab.io/pialab/back.git"
-    dest: "{{ DEPLOYMENT_DIR }}/pialab/back/src/"
+    dest: "{{ DEPLOYMENT_DIR }}/back/src/"
 
 NGINX_LOG_DIR: "/var/log/nginx"
 

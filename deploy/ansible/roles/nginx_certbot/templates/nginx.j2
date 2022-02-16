@@ -1,14 +1,15 @@
 {% for endpoint in NGINX_ENDPOINTS %}
 
+    {% if not SKIP_SSL %}
     server {
-        listen 443;
-        listen [::]:443;
+        listen 443 ssl;
+        listen [::]:443 ssl;
 
         server_name {{ endpoint.hostname }};
 
        {% if endpoint.ips_only %}
            {% for ip in endpoint.ips_only %}
-           allow {{ ip }};
+           allow {{ ip }};
            {% endfor %}
            deny all;
        {% endif %}
@@ -17,7 +18,6 @@
             client_max_body_size {{ endpoint.max_upload_size }};
         {% endif %}
 
-        ssl on;
         ssl_certificate /etc/letsencrypt/live/{{ endpoint.hostname }}/fullchain.pem;
         ssl_certificate_key /etc/letsencrypt/live/{{ endpoint.hostname }}/privkey.pem;
         include /etc/letsencrypt/options-ssl-nginx.conf;
@@ -54,14 +54,16 @@
         {% endif %}
 
     }
+    {% endif %}
 
 
     server {
         # Redirect to HTTPS
         listen 80;
         server_name {{ endpoint.hostname }};
+        {% if not SKIP_SSL %}
         return 301 https://$host$request_uri;
+        {% endif %}
     }
 
 {% endfor %}
-

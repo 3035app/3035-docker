@@ -26,7 +26,7 @@ for i in $@; do
         ;;
     staging)
         TARGET=staging
-        TARGET_BRANCH=staging
+        TARGET_BRANCH=dev
         ;;
     prod)
         TARGET=prod

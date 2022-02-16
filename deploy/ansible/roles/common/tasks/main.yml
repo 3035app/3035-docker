@@ -13,7 +13,8 @@
       - apt-transport-https
       - ca-certificates
       - curl
-      - gnupg-agent
+      - gpg-agent
+      - gpg
       - software-properties-common
       - python-setuptools
       - python3-pip

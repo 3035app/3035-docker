@@ -6,14 +6,25 @@
   when: not FAST_DEPLOYMENT
   become: true
 
-- name: Creating backend directories (specific owner)
-  file: path={{ item }} state=directory mode=0750 owner={{ DEPLOY_USER }}
+# - name: Creating backend directories (specific owner)
+#   file: path={{ item }} state=directory mode=0750 owner={{ DEPLOY_USER }}
+#   with_items:
+#     - "{{ DEPLOYMENT_DIR}}/back/src/var"
+#   when: not FAST_DEPLOYMENT
+#   become: true
+
+- name: copy some files from parent repo to child repo
   with_items:
-    - "{{ BACKEND_LOG_DIR }}"
-    - "{{ DJANGO_MEDIA_DIR }}"
-    - "{{ DJANGO_STATIC_DIR }}"
-  when: not FAST_DEPLOYMENT
-  become: true
+    - src: back/docker/vendor # does not end with '/' so director itself is copied, not just contents
+      dest: back/src/
+    - src: back/docker/.env
+      dest: back/src/
+    - src: front/docker/environment.dev.ts
+      dest: front/src/src/environments/
+  copy:
+    remote_src: yes
+    src: "{{ DEPLOYMENT_DIR }}/{{ item.src }}"
+    dest: "{{ DEPLOYMENT_DIR }}/{{ item.dest }}"
 
 - name: Set "MAILTO" environment variable to crontab
   ansible.builtin.cron:
@@ -32,6 +43,6 @@
     state: present
     build: yes
     restarted: yes
-    nocache: "{{ FAST_DEPLOYMENT | ternary(yes,no)}}"
+    nocache: "{{ FAST_DEPLOYMENT | ternary('no','yes')}}"
   notify:
     - "deployment done"

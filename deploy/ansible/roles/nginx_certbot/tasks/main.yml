@@ -14,19 +14,25 @@
   when: not FAST_DEPLOYMENT
   become: true
 
-- name: nginx configuration
+- name: test presence of letsencrypt files
+  stat:
+    path: /etc/letsencrypt/options-ssl-nginx.conf
+  register: ssl_nginx
+
+# if Letsencrypt files are not present, start an HTTP only version of nginx server
+- name: nginx HTTP only configuration
   template: src=nginx.j2 dest=/etc/nginx/sites-enabled/default
-  notify:
-    - restart nginx
-  register: nginx_config
-  when: not FAST_DEPLOYMENT
+  vars:
+    SKIP_SSL: true
+  register: nginx_config_http
+  when: not FAST_DEPLOYMENT and not ssl_nginx.stat.exists
   become: true
 
 # restart nginx before running certbot because when adding new domain, letsencrypt needs to reach the host
-- name: restart nginx
+- name: restart nginx HTTP only
   become: True
   service: name=nginx state=restarted
-  when: nginx_config is changed
+  when: nginx_config_http is changed
 
 - name: Associate SSL certificates to email address
   template: src=lets_encrypt_cli.ini dest=/etc/letsencrypt/cli.ini
@@ -38,3 +44,18 @@
   command: certbot --nginx certonly --agree-tos -d {{ item.hostname }} -n --keep-until-expiring
   become: true
   when: not FAST_DEPLOYMENT
+
+# the definitive nginx config, with SSL installed
+- name: nginx SSL configuration
+  template: src=nginx.j2 dest=/etc/nginx/sites-enabled/default
+  vars:
+    SKIP_SSL: false
+  register: nginx_config_ssl
+  when: not FAST_DEPLOYMENT
+  become: true
+
+# restart nginx
+- name: restart nginx with SSL
+  become: True
+  service: name=nginx state=restarted
+  when: nginx_config_ssl is changed

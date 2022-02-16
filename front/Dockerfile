@@ -1,4 +1,4 @@
-FROM debian:stable
+FROM node:lts-alpine as dev
 
 RUN apt-get update && apt-get install --no-install-recommends -y apt-transport-https lsb-release ca-certificates net-tools lsof wget sudo less \
     && apt-get install --no-install-recommends -y git curl build-essential unzip npm \
@@ -24,3 +24,10 @@ CMD ["ng", "serve", "--host", "0.0.0.0"]
 
 LABEL author=PiaLab
 LABEL description="PiaLab frontend"
+
+
+FROM dev as prod
+
+RUN npm clean-install
+
+ENTRYPOINT []
