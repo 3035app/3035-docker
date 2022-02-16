@@ -18,6 +18,7 @@
   stat:
     path: /etc/letsencrypt/options-ssl-nginx.conf
   register: ssl_nginx
+  when: not FAST_DEPLOYMENT
 
 # if Letsencrypt files are not present, start an HTTP only version of nginx server
 - name: nginx HTTP only configuration
