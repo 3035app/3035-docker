@@ -1,5 +1,9 @@
 version: "3"
 
+volumes:
+  pialab_back_db:
+  pialab_back_var:
+
 services:
   back:
     build: back
@@ -8,7 +12,8 @@ services:
       - nginx-proxy
     volumes:
       # - ./back/src:/var/www/pialab-back/
-      - /var/www/pialab-back/var
+      - pialab_back_var:/var/www/pialab-back/var
+      - pialab_back_db:/var/lib/postgresql
     ports:
       - '8000:80'
     environment:

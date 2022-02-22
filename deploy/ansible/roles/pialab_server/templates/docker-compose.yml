@@ -1,7 +1,8 @@
 version: "3"
 
 volumes:
-    pialab_back_var:
+  pialab_back_var:
+  pialab_back_db:
 
 services:
   back:
@@ -9,16 +10,16 @@ services:
     container_name: pialab_back
     volumes:
       - pialab_back_var:/var/www/pialab-back/var
+      - pialab_back_db:/var/lib/postgresql
     ports:
-      - '8000:80'
+      - "8000:80"
 
   front:
-    build: 
+    build:
       context: front
       target: prod
     container_name: pialab_front
     depends_on:
       - back
     ports:
-      - '8080:4200'
-
+      - "8080:4200"
