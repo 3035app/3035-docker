@@ -12,8 +12,6 @@
       dest: back/src/
     - src: back/docker/.env
       dest: back/src/
-    - src: front/docker/environment.dev.ts
-      dest: front/src/src/environments/
   copy:
     remote_src: yes
     src: "{{ DEPLOYMENT_DIR }}/{{ item.src }}"
