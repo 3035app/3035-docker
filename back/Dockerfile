@@ -26,7 +26,6 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && chmod 755 /usr/local/bin/composer
 
 COPY src/ /var/www/pialab-back/
-COPY docker/.env /var/www/pialab-back/
 COPY docker/000-default.conf /etc/apache2/sites-available/
 
 # TODO: issue on libs versions -- waiting for Sf upgrade

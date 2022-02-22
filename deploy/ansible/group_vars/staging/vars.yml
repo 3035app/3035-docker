@@ -1,5 +1,7 @@
 GIT_BRANCH: dev
 
+SYMPHONY_APP_SECRET: "{{ vault_SYMPHONY_APP_SECRET }}"
+
 NGINX_ENDPOINTS:
   - hostname: back.{{ DOMAIN_NAME }}
     log_access_filename: back-access.log
