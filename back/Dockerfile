@@ -27,6 +27,7 @@ RUN curl -sS https://getcomposer.org/installer | php \
 
 COPY src/ /var/www/pialab-back/
 COPY docker/000-default.conf /etc/apache2/sites-available/
+RUN mkdir --mode=777 /var/www/pialab-back/var
 
 # TODO: issue on libs versions -- waiting for Sf upgrade
 # RUN cd /var/www/pialab-back/ \
@@ -55,6 +56,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 
 WORKDIR /var/www/pialab-back/
 EXPOSE 80/tcp
+
 
 CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
 
