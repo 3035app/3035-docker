@@ -26,13 +26,15 @@ RUN echo "phar.readonly = Off" >> /etc/php/${PHPVER}/cli/conf.d/42-phar-readonly
     && echo "memory_limit=-1" >> /etc/php/${PHPVER}/cli/conf.d/42-memory-limit.ini \
     && echo "date.timezone=Europe/Paris" >> /etc/php/${PHPVER}/cli/conf.d/68-date-timezone.ini
 
-RUN curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer \
+RUN curl -sS https://getcomposer.org/installer | php -- --version=1.10.25 --install-dir=/usr/local/bin --filename=composer \
     && chmod 755 /usr/local/bin/composer
+
+RUN composer require symfony/deprecation-contracts:2.2
+RUN composer require --dev symfony/maker-bundle
 
 COPY src/ /var/www/pialab-back/
 COPY docker/000-default.conf /etc/apache2/sites-available/
-RUN mkdir --mode=777 /var/www/pialab-back/var
+RUN mkdir -p --mode=777 /var/www/pialab-back/var
 
 # TODO: issue on libs versions -- waiting for Sf upgrade
 # RUN cd /var/www/pialab-back/ \

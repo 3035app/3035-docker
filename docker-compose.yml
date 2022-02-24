@@ -12,7 +12,6 @@ services:
       - nginx-proxy
     volumes:
       - ./back/src:/var/www/pialab-back/
-      - pialab_back_var:/var/www/pialab-back/var
       - pialab_back_db:/var/lib/postgresql
     ports:
       - '8000:80'
