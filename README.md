@@ -56,6 +56,7 @@ Project URLs are:
 
 - backend: http://back.pialab.localhost (test/test)
 - frontend: http://localhost:8080 (test/test)
+- adminer: http://adminer.pialab.localhost
 
 FIXME: frontend URL should be http://front.pialab.localhost
 
@@ -78,3 +79,13 @@ To summarize, there are 3 git repositories:
 - back (https://git.pialab.io/pialab/back) for backend app (Symfony)
 
 These 3 repositories are independent, they need to be managed individually
+
+# Database remote connection
+
+In order to connect to the development database (using Adminer for example), the following settings must be used:
+
+- System: **PostgreSQL**
+- Server: **back**
+- User: **user_pialab**
+- Password: **password_pialab**
+- Database: **db_pialab**
