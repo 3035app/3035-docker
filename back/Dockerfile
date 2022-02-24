@@ -17,6 +17,11 @@ RUN apt-get update \
 RUN apt-get install -y php-symfony-console
 RUN apt-get install -y postgresql
 
+# expose postgresql from remote access
+RUN sed -i "s|#listen_addresses = 'localhost'|listen_addresses = '*' |g" /etc/postgresql/13/main/postgresql.conf
+RUN echo "host  all  all  0.0.0.0/0  md5" >> /etc/postgresql/13/main/pg_hba.conf
+RUN echo "host  all  all  ::/0       md5" >> /etc/postgresql/13/main/pg_hba.conf
+
 RUN echo "phar.readonly = Off" >> /etc/php/${PHPVER}/cli/conf.d/42-phar-readonly.ini \
     && echo "memory_limit=-1" >> /etc/php/${PHPVER}/cli/conf.d/42-memory-limit.ini \
     && echo "date.timezone=Europe/Paris" >> /etc/php/${PHPVER}/cli/conf.d/68-date-timezone.ini
