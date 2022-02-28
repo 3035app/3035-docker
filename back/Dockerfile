@@ -29,9 +29,6 @@ RUN echo "phar.readonly = Off" >> /etc/php/${PHPVER}/cli/conf.d/42-phar-readonly
 RUN curl -sS https://getcomposer.org/installer | php -- --version=1.10.25 --install-dir=/usr/local/bin --filename=composer \
     && chmod 755 /usr/local/bin/composer
 
-RUN composer require symfony/deprecation-contracts:2.2
-RUN composer require --dev symfony/maker-bundle
-
 COPY src/ /var/www/pialab-back/
 COPY docker/000-default.conf /etc/apache2/sites-available/
 RUN mkdir -p --mode=777 /var/www/pialab-back/var
