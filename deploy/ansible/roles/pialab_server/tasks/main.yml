@@ -16,7 +16,7 @@
     dest: "{{ DEPLOYMENT_DIR }}/{{ item.dest }}"
 
 - name: Create .env file for backend
-  template: src=env.j2 dest={{ DEPLOYMENT_DIR }}/back/src/
+  template: src=env.j2 dest={{ DEPLOYMENT_DIR }}/back/src/.env
 
 - name: Set "MAILTO" environment variable to crontab
   ansible.builtin.cron:
