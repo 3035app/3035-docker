@@ -1,0 +1,49 @@
+
+- name: Creating directories
+  file: path={{ item }} state=directory mode=0750 owner={{ DEPLOY_USER }}
+  with_items:
+    - "{{ NGINX_LOG_DIR }}"
+  when: not FAST_DEPLOYMENT
+  become: true
+
+- name: copy some files from parent repo to child repo
+  with_items:
+    - src: back/docker/vendor # does not end with '/' so director itself is copied, not just contents
+      dest: back/src/
+  copy:
+    remote_src: yes
+    src: "{{ DEPLOYMENT_DIR }}/{{ item.src }}"
+    dest: "{{ DEPLOYMENT_DIR }}/{{ item.dest }}"
+
+- name: Create .env file for backend
+  template: src=env.j2 dest={{ DEPLOYMENT_DIR }}/back/src/
+
+- name: Set "MAILTO" environment variable to crontab
+  ansible.builtin.cron:
+    name: MAILTO
+    env: yes
+    job: equipe@lesoctetslibres.com
+    state: present
+
+- name: Add cron task to cleanup docker system (docker system prune)
+  ansible.builtin.cron:
+    name: docker system prune
+    state: present
+    job: "docker system prune -f"
+    minute: "0"
+    hour: "2"
+    weekday: "0" #sunday
+
+- name: Generating docker-compose.yml file
+  template: src=docker-compose.yml dest={{ DEPLOYMENT_DIR }}/docker-compose.deploy.yml
+
+- name: Docker build & restart
+  docker_compose:
+    project_src: "{{ DEPLOYMENT_DIR }}"
+    files: "docker-compose.deploy.yml"
+    state: present
+    build: yes
+    restarted: yes
+    nocache: "{{ FAST_DEPLOYMENT | ternary('no','yes')}}"
+  notify:
+    - "deployment done"

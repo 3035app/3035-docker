@@ -1,0 +1,16 @@
+- name: install packages and update
+  hosts: staging
+  user: root
+  become: false
+  roles:
+    - name: common
+      when: not FAST_DEPLOYMENT
+
+- name: Deploy Pialab Backend on STAGING machine
+  hosts: staging
+  user: "{{ DEPLOY_USER }}"
+  become: false
+  roles:
+    - git_clone
+    - nginx_certbot
+    - pialab_server

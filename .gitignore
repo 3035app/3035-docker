@@ -1,2 +1,6 @@
+# subprojects
 back/src
 front/src
+
+# IDE
+.dccache
