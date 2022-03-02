@@ -89,3 +89,17 @@ In order to connect to the development database (using Adminer for example), the
 - User: **user_pialab**
 - Password: **password_pialab**
 - Database: **db_pialab**
+
+# Deployment with Ansible
+
+## install ansible dependencies
+
+```
+# you must be inside the ansible folder
+cd deploy/ansible
+ansible-galaxy install -r ./requirements.yml
+```
+
+## deploy
+
+`./deploy.sh staging [fast]`
