@@ -66,7 +66,7 @@ Create an application in backend app:
 - Go to "Applications" tab and add an application :
   - Nom : Default app
   - URL : http://localhost:8080
-- On applications list, click on key icon of "Default app", copy "Client ID" and "Client Secret" and paste into front/src/src/envirnments/envirnment.dev.ts file
+- On applications list, click on key icon of "Default app", copy "Client ID" and "Client Secret" and paste into front/src/src/environments/environment.dev.ts file
 - Go to "Utilisateurs" tab, edit test user and add Application "Default app"
 - Restart pialab_front container
 
