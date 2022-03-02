@@ -1,0 +1,17 @@
+- name: restart nginx
+  become: True
+  service: name=nginx state=restarted
+
+- name: send slack message
+  community.general.slack:
+    token: T0BRZTZ9D/B023QP9BSMS/SQ8EcUrtqhB7EgWDw4Nqs81j
+    msg: '{{ "MEP" if GIT_BRANCH=="master" else "MET" }} {{ PROJECT_NAME }} sur {{ inventory_hostname }}'
+    channel: "#mises-en-prod"
+    username: "Ansible pour {{ PROJECT_NAME }}"
+    # icon_emoji: ':stethoscope:'
+    icon_url: https://www.pialab.io/wp-content/uploads/2021/03/logo-seul.png
+    link_names: 0
+    parse: "none"
+  become: false
+  delegate_to: localhost
+  listen: "deployment done"

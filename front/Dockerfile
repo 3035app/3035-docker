@@ -1,4 +1,4 @@
-FROM debian:stable
+FROM debian:stable as dev
 
 RUN apt-get update && apt-get install --no-install-recommends -y apt-transport-https lsb-release ca-certificates net-tools lsof wget sudo less \
     && apt-get install --no-install-recommends -y git curl build-essential unzip npm \
@@ -6,7 +6,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y apt-transport-h
     && apt-get autoremove -y && apt-get clean
 
 COPY src/ /var/www/pialab-front/
-COPY docker/environment.dev.ts /var/www/pialab-front/src/environments/
 
 COPY docker/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
@@ -24,3 +23,11 @@ CMD ["ng", "serve", "--host", "0.0.0.0"]
 
 LABEL author=PiaLab
 LABEL description="PiaLab frontend"
+
+
+FROM dev as prod
+
+RUN npm clean-install
+
+ENTRYPOINT []
+CMD ["ng", "serve", "--host", "0.0.0.0", "--disableHostCheck", "true"]

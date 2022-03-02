@@ -1,0 +1,62 @@
+- name: installing nginx and required packages for Let's encrypt certificates
+  apt:
+    pkg:
+      - nginx
+      - python3-certbot-nginx
+    state: present
+  notify:
+    - restart nginx
+  when: not FAST_DEPLOYMENT
+  become: true
+
+- name: autorotate nginx logs
+  template: src=logrotate.j2 dest=/etc/logrotate.d/nginx mode=0644 owner=root
+  when: not FAST_DEPLOYMENT
+  become: true
+
+- name: test presence of letsencrypt files
+  stat:
+    path: /etc/letsencrypt/options-ssl-nginx.conf
+  register: ssl_nginx
+  when: not FAST_DEPLOYMENT
+
+# if Letsencrypt files are not present, start an HTTP only version of nginx server
+- name: nginx HTTP only configuration
+  template: src=nginx.j2 dest=/etc/nginx/sites-enabled/default
+  vars:
+    SKIP_SSL: true
+  register: nginx_config_http
+  when: not FAST_DEPLOYMENT and not ssl_nginx.stat.exists
+  become: true
+
+# restart nginx before running certbot because when adding new domain, letsencrypt needs to reach the host
+- name: restart nginx HTTP only
+  become: True
+  service: name=nginx state=restarted
+  when: nginx_config_http is changed
+
+- name: Associate SSL certificates to email address
+  template: src=lets_encrypt_cli.ini dest=/etc/letsencrypt/cli.ini
+  become: true
+  when: not FAST_DEPLOYMENT
+
+- name: Creating/updating HTTPS certificate
+  with_items: "{{ NGINX_ENDPOINTS }}"
+  command: certbot --nginx certonly --agree-tos -d {{ item.hostname }} -n --keep-until-expiring
+  become: true
+  when: not FAST_DEPLOYMENT
+
+# the definitive nginx config, with SSL installed
+- name: nginx SSL configuration
+  template: src=nginx.j2 dest=/etc/nginx/sites-enabled/default
+  vars:
+    SKIP_SSL: false
+  register: nginx_config_ssl
+  when: not FAST_DEPLOYMENT
+  become: true
+
+# restart nginx
+- name: restart nginx with SSL
+  become: True
+  service: name=nginx state=restarted
+  when: nginx_config_ssl is changed

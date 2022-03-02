@@ -56,6 +56,7 @@ Project URLs are:
 
 - backend: http://back.pialab.localhost (test/test)
 - frontend: http://localhost:8080 (test/test)
+- adminer: http://adminer.pialab.localhost
 
 FIXME: frontend URL should be http://front.pialab.localhost
 
@@ -65,7 +66,7 @@ Create an application in backend app:
 - Go to "Applications" tab and add an application :
   - Nom : Default app
   - URL : http://localhost:8080
-- On applications list, click on key icon of "Default app", copy "Client ID" and "Client Secret" and paste into front/src/src/envirnments/envirnment.dev.ts file
+- On applications list, click on key icon of "Default app", copy "Client ID" and "Client Secret" and paste into front/src/src/environments/environment.dev.ts file
 - Go to "Utilisateurs" tab, edit test user and add Application "Default app"
 - Restart pialab_front container
 
@@ -78,3 +79,13 @@ To summarize, there are 3 git repositories:
 - back (https://git.pialab.io/pialab/back) for backend app (Symfony)
 
 These 3 repositories are independent, they need to be managed individually
+
+# Database remote connection
+
+In order to connect to the development database (using Adminer for example), the following settings must be used:
+
+- System: **PostgreSQL**
+- Server: **back**
+- User: **user_pialab**
+- Password: **password_pialab**
+- Database: **db_pialab**

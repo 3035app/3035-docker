@@ -1,5 +1,9 @@
 version: "3"
 
+volumes:
+  pialab_back_db:
+  pialab_back_var:
+
 services:
   back:
     build: back
@@ -8,14 +12,18 @@ services:
       - nginx-proxy
     volumes:
       - ./back/src:/var/www/pialab-back/
+      - pialab_back_db:/var/lib/postgresql
     ports:
       - '8000:80'
+      - '5432:5432'
     environment:
       VIRTUAL_HOST: back.pialab.localhost # Managed by nginx-proxy
       VIRTUAL_PORT: 80
 
   front:
-    build: front
+    build:
+      context: front
+      target: dev
     container_name: pialab_front
     depends_on:
       - back
@@ -28,8 +36,24 @@ services:
       VIRTUAL_HOST: front.pialab.localhost # Managed by nginx-proxy
       VIRTUAL_PORT: 4200
 
-  nginx-proxy: # Development only : allow tu use VIRTUAL_HOST environment variables
+  adminer:
+    image: adminer:4.7.7
+    container_name: pialab_adminer
+    restart: 'no'
+    depends_on:
+      - back
+      - nginx-proxy
+    ports:
+      - '9985:8080'
+    logging:
+      driver: 'none' # Disable logging of this container
+    environment:
+      VIRTUAL_HOST: adminer.pialab.localhost # Managed by nginx-proxy
+      VIRTUAL_PORT: 8080
+
+  nginx-proxy: # Development only : allow to use VIRTUAL_HOST environment variables
     image: jwilder/nginx-proxy
+    container_name: pialab_nginx_proxy
     volumes:
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
       # - "./docker/proxy-nginx.conf:/etc/nginx/cond.d/proxy.conf"

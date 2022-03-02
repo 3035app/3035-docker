@@ -17,17 +17,21 @@ RUN apt-get update \
 RUN apt-get install -y php-symfony-console
 RUN apt-get install -y postgresql
 
+# expose postgresql from remote access
+RUN sed -i "s|#listen_addresses = 'localhost'|listen_addresses = '*' |g" /etc/postgresql/13/main/postgresql.conf
+RUN echo "host  all  all  0.0.0.0/0  md5" >> /etc/postgresql/13/main/pg_hba.conf
+RUN echo "host  all  all  ::/0       md5" >> /etc/postgresql/13/main/pg_hba.conf
+
 RUN echo "phar.readonly = Off" >> /etc/php/${PHPVER}/cli/conf.d/42-phar-readonly.ini \
     && echo "memory_limit=-1" >> /etc/php/${PHPVER}/cli/conf.d/42-memory-limit.ini \
     && echo "date.timezone=Europe/Paris" >> /etc/php/${PHPVER}/cli/conf.d/68-date-timezone.ini
 
-RUN curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer \
+RUN curl -sS https://getcomposer.org/installer | php -- --version=1.10.25 --install-dir=/usr/local/bin --filename=composer \
     && chmod 755 /usr/local/bin/composer
 
 COPY src/ /var/www/pialab-back/
-COPY docker/.env /var/www/pialab-back/
 COPY docker/000-default.conf /etc/apache2/sites-available/
+RUN mkdir -p --mode=777 /var/www/pialab-back/var
 
 # TODO: issue on libs versions -- waiting for Sf upgrade
 # RUN cd /var/www/pialab-back/ \
@@ -40,6 +44,12 @@ RUN /etc/init.d/postgresql start \
     && bin/console doctrine:migrations:migrate --no-interaction \
     && bin/console pia:user:create test@test.tld test --username=test \
     && bin/console pia:user:promote test@test.tld --role=ROLE_SUPER_ADMIN \
+    && bin/console pia:user:promote test@test.tld --role=ROLE_REDACTOR \
+    && bin/console pia:user:promote test@test.tld --role=ROLE_EVALUATOR \
+    && bin/console pia:user:promote test@test.tld --role=ROLE_CONTROLLER \
+    && bin/console pia:user:promote test@test.tld --role=ROLE_CONTROLLER_MULTI \
+    && bin/console pia:user:promote test@test.tld --role=ROLE_DPO \
+    && bin/console pia:user:promote test@test.tld --role=ROLE_SHARED_DPO \
     && /etc/init.d/postgresql stop
 
 RUN a2enmod rewrite
@@ -50,6 +60,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 
 WORKDIR /var/www/pialab-back/
 EXPOSE 80/tcp
+
 
 CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
 
