@@ -1,6 +1,6 @@
 FROM debian:11
 
-ARG PSQL_VER=13
+ARG PSQL_VER=11
 ARG PHP_VER=7.4
 
 RUN apt-get update && apt-get install --no-install-recommends -y apt-transport-https lsb-release ca-certificates net-tools lsof wget sudo less \
