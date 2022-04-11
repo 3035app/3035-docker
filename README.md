@@ -70,6 +70,15 @@ Create an application in backend app:
 - Go to "Utilisateurs" tab, edit test user and add Application "Default app"
 - Restart pialab_front container
 
+## `.env` parameters
+
+Create 2 parameters in `.env` file.
+
+as following:
+
+- `FRONT_URL_ENV=http://localhost:8080`
+- `APP_ENV=dev`
+
 # Gitlab management
 
 To summarize, there are 3 git repositories:
