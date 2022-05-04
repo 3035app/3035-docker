@@ -103,10 +103,19 @@ In order to connect to the development database (using Adminer for example), the
 
 ## install ansible dependencies
 
+Ansible version > 2.11
+
 ```
 # you must be inside the ansible folder
 cd deploy/ansible
 ansible-galaxy install -r ./requirements.yml
+```
+
+Ansible version < 2.11
+
+```
+cd deploy/ansible
+ansible-galaxy collection install -r requirements.yml
 ```
 
 ## deploy
