@@ -5,12 +5,12 @@ function help() {
     echo "Usage:"
     echo "deploy staging|prod [fast] [cmd] [-b BRANCH] [EXTRA-ARGS]"
     echo ""
-    echo "target: staging|prod - specify to which server you want to deploy;"
-    echo "                       this also select the appropriate branch (staging"
-    echo "                       or master, resp.)"
-    echo "fast: (optional)     - toggles fast deployment"
-    echo "cmd: don't run, display command that would be run"
-    echo "EXTRA-ARGS: additional parameters to pass to ansible-playbook"
+    echo "target: staging|prod   - specify to which server you want to deploy;"
+    echo "                         this also select the appropriate branch (dev or master, resp.)"
+    echo "fast: (optional)       - toggles fast deployment"
+    echo "cmd: (optional)        - don't run, just display the Ansible command that would be run"
+    echo "-b BRANCH: (optional)  - name of the branch to deploy (overrides the default branch)"
+    echo "EXTRA-ARGS: (optional) - additional parameters to pass to ansible-playbook"
 }
 
 ANSIBLE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
@@ -89,8 +89,8 @@ fi
 if [ -f ${VAULT_PASSWORD_FILE} ]; then
     VAULT_PASSWORD_METHOD=${VAULT_PASSWORD_FILE}
 else
-    echo "Vous pouvez sauvegarder le mot de passe du vault ansible dans le fichier vault-password.\
-  Sinon il vous sera demandé par ansible à chaque déploiement."
+  echo ""
+  echo "you can save the Ansible vault password into a file named vault-password, otherwise it would be prompted at each deployment."
 fi
 
 if [ $SHOW_COMMAND ]; then
@@ -116,7 +116,7 @@ if [[ $REPLY =~ ^([Yy](es)?|Y(ES)?)$ ]]; then
 
     set +x
     echo ""
-    echo "*** DEPLOYMENT COMPLETE ! ***"
+    echo "*** DEPLOYMENT COMPLETE! ***"
     echo ""
 
 else
