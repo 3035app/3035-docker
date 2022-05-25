@@ -28,3 +28,9 @@ docker exec -it $CONTAINER_ID bin/console pia:user:create Daniel@DPO.DPO Daniel 
    --application=Default-app --structure=Default-struct
 
 docker exec -it $CONTAINER_ID bin/console pia:user:promote Daniel@DPO.DPO --role=ROLE_DPO
+
+
+docker exec -it $CONTAINER_ID bin/console pia:user:create Thierry@RT.RT Thierry \
+   --application=Default-app --structure=Default-struct
+
+docker exec -it $CONTAINER_ID bin/console pia:user:promote Thierry@RT.RT --role=ROLE_CONTROLLER
