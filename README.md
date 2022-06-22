@@ -16,6 +16,8 @@ Clone the projects `pialab/back` and `pialab/front` into their respective source
 cd <piablab-root>
 git clone ssh://git@git.pialab.io:2222/pialab/back.git ./back/src
 git clone ssh://git@git.pialab.io:2222/pialab/front.git ./front/src
+(cd ./back/src && git checkout dev)
+(cd ./front/src && git checkout dev)
 ```
 
 FIXME: We do have an issue with `composer install` on the backend. For now we have to manually copy the `vendor` directory into the Symfony source directory:
